@@ -27,7 +27,7 @@ const agentCapabilities = new Map();
 //                            to show.
 //   - `fallbackModels`     : static hint list. Used as the source of truth
 //                            for CLIs that don't expose a listing command
-//                            (Claude Code, Codex, Gemini CLI, Qwen Code)
+//                            (Claude Code, Codex, Devin for Terminal, Gemini CLI, Qwen Code)
 //                            and as the fallback for the others.
 //   - `reasoningOptions`   : optional reasoning-effort presets (currently
 //                            only Codex exposes this knob).
@@ -117,6 +117,11 @@ export const AGENT_DEFS = [
     id: 'claude',
     name: 'Claude Code',
     bin: 'claude',
+    // Drop-in forks that ship a CLI argv-compatible with `claude`. Tried in
+    // order if `claude` itself isn't on PATH, so users on a single-binary
+    // install (e.g. only OpenClaude — https://github.com/Gitlawb/openclaude
+    // — issue #235) get auto-detected without writing wrapper scripts.
+    fallbackBins: ['openclaude'],
     versionArgs: ['--version'],
     helpArgs: ['--help'],
     capabilityFlags: {
@@ -197,8 +202,13 @@ export const AGENT_DEFS = [
       { id: 'medium', label: 'Medium' },
       { id: 'high', label: 'High' },
     ],
-    // Prompt delivered via stdin (`codex exec -`) to avoid Windows
-    // `spawn ENAMETOOLONG` while keeping Codex on its structured JSON stream.
+    // Prompt is delivered via stdin pipe (gated by `promptViaStdin: true`
+    // below) to avoid Windows `spawn ENAMETOOLONG` while keeping Codex on
+    // its structured JSON stream. Recent Codex CLI versions reject a bare
+    // `-` argv sentinel — passing both the pipe and `-` produces
+    // `error: unexpected argument '-' found` and the agent exits with
+    // code 2 before any prompt is read (see issue #237). The pipe alone
+    // is sufficient for stdin delivery.
     buildArgs: (_prompt, _imagePaths, _extra, options = {}, runtimeContext = {}) => {
       const args = [
         'exec',
@@ -223,12 +233,40 @@ export const AGENT_DEFS = [
         // is exposed as `model_reasoning_effort`.
         args.push('-c', `model_reasoning_effort="${effort}"`);
       }
-      args.push('-');
       return args;
     },
     promptViaStdin: true,
     streamFormat: 'json-event-stream',
     eventParser: 'codex',
+  },
+  {
+    id: 'devin',
+    name: 'Devin for Terminal',
+    bin: 'devin',
+    versionArgs: ['--version'],
+    fetchModels: async (resolvedBin) =>
+      detectAcpModels({
+        bin: resolvedBin,
+        args: ['--permission-mode', 'dangerous', '--respect-workspace-trust', 'false', 'acp'],
+        timeoutMs: 15_000,
+        defaultModelOption: DEFAULT_MODEL_OPTION,
+      }),
+    // Fallback aliases from Devin for Terminal docs
+    // (https://cli.devin.ai/docs/models): `adaptive` appears in the config example;
+    // `opus`, `sonnet`, `swe`, `codex`, `gemini`, and `gpt` are documented
+    // as short model-family names / recommended picks.
+    fallbackModels: [
+      DEFAULT_MODEL_OPTION,
+      { id: 'adaptive', label: 'adaptive' },
+      { id: 'swe', label: 'swe' },
+      { id: 'opus', label: 'opus' },
+      { id: 'sonnet', label: 'sonnet' },
+      { id: 'codex', label: 'codex' },
+      { id: 'gpt', label: 'gpt' },
+      { id: 'gemini', label: 'gemini' },
+    ],
+    buildArgs: () => ['--permission-mode', 'dangerous', '--respect-workspace-trust', 'false', 'acp'],
+    streamFormat: 'acp-json-rpc',
   },
   {
     id: 'gemini',
@@ -426,10 +464,8 @@ export const AGENT_DEFS = [
       { id: 'claude-sonnet-4.6', label: 'Claude Sonnet 4.6' },
       { id: 'gpt-5.2', label: 'GPT-5.2' },
     ],
-    buildArgs: (prompt, _imagePaths, extraAllowedDirs = [], options = {}) => {
+    buildArgs: (_prompt, _imagePaths, extraAllowedDirs = [], options = {}) => {
       const args = [
-        '-p',
-        prompt,
         '--allow-all-tools',
         '--output-format',
         'json',
@@ -443,6 +479,7 @@ export const AGENT_DEFS = [
       for (const d of dirs) args.push('--add-dir', d);
       return args;
     },
+    promptViaStdin: true,
     streamFormat: 'copilot-stream-json',
   },
   {
@@ -543,6 +580,21 @@ export function resolveOnPath(bin) {
   return null;
 }
 
+// Resolve the first available binary for an agent definition. Tries
+// `def.bin` first, then walks `def.fallbackBins` in order. Used for
+// agents whose forks ship under a different binary name but speak the
+// exact same CLI (Claude Code → OpenClaude, issue #235). Returns null
+// when no candidate is on PATH.
+export function resolveAgentExecutable(def) {
+  if (!def?.bin) return null;
+  const candidates = [def.bin, ...(Array.isArray(def.fallbackBins) ? def.fallbackBins : [])];
+  for (const bin of candidates) {
+    const resolved = resolveOnPath(bin);
+    if (resolved) return resolved;
+  }
+  return null;
+}
+
 async function fetchModels(def, resolvedBin) {
   if (typeof def.fetchModels === 'function') {
     try {
@@ -574,7 +626,7 @@ async function fetchModels(def, resolvedBin) {
 }
 
 async function probe(def) {
-  const resolved = resolveOnPath(def.bin);
+  const resolved = resolveAgentExecutable(def);
   if (!resolved) {
     return {
       ...stripFns(def),
@@ -621,8 +673,9 @@ function stripFns(def) {
   // Drop the buildArgs / listModels closures but keep declarative metadata
   // (reasoningOptions, streamFormat, name, bin, etc.). `models` is
   // populated separately by `fetchModels`, so we strip the static
-  // `fallbackModels` slot here too. `helpArgs` / `capabilityFlags` are
-  // probe-only metadata and shouldn't bleed into the API response either.
+  // `fallbackModels` slot here too. `helpArgs` / `capabilityFlags` /
+  // `fallbackBins` are probe-only metadata and shouldn't bleed into the
+  // API response either.
   const {
     buildArgs,
     listModels,
@@ -630,6 +683,7 @@ function stripFns(def) {
     fallbackModels,
     helpArgs,
     capabilityFlags,
+    fallbackBins,
     ...rest
   } = def;
   return rest;
@@ -658,7 +712,7 @@ export function getAgentDef(id) {
 export function resolveAgentBin(id) {
   const def = getAgentDef(id);
   if (!def?.bin) return null;
-  return resolveOnPath(def.bin);
+  return resolveAgentExecutable(def);
 }
 
 // Daemon's /api/chat needs to validate the user's model pick against the
