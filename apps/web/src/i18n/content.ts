@@ -4,13 +4,166 @@ import type {
   SkillSummary,
 } from '../types';
 import type { Locale } from './types';
+import {
+  FR_DESIGN_SYSTEM_CATEGORIES,
+  FR_DESIGN_SYSTEM_SUMMARIES,
+  FR_PROMPT_TEMPLATE_CATEGORIES,
+  FR_PROMPT_TEMPLATE_COPY,
+  FR_PROMPT_TEMPLATE_TAGS,
+  FR_SKILL_COPY,
+} from './content.fr';
+import {
+  RU_DESIGN_SYSTEM_CATEGORIES,
+  RU_DESIGN_SYSTEM_SUMMARIES,
+  RU_PROMPT_TEMPLATE_CATEGORIES,
+  RU_PROMPT_TEMPLATE_COPY,
+  RU_PROMPT_TEMPLATE_TAGS,
+  RU_SKILL_COPY,
+} from './content.ru';
+import {
+  ZH_CN_DESIGN_SYSTEM_CATEGORIES,
+  ZH_CN_DESIGN_SYSTEM_SUMMARIES,
+  ZH_CN_PROMPT_TEMPLATE_CATEGORIES,
+  ZH_CN_PROMPT_TEMPLATE_COPY,
+  ZH_CN_PROMPT_TEMPLATE_TAGS,
+  ZH_CN_SKILL_COPY,
+} from './content.zh-CN';
+import {
+  JA_DESIGN_SYSTEM_CATEGORIES,
+  JA_DESIGN_SYSTEM_SUMMARIES,
+  JA_PROMPT_TEMPLATE_CATEGORIES,
+  JA_PROMPT_TEMPLATE_COPY,
+  JA_PROMPT_TEMPLATE_TAGS,
+  JA_SKILL_COPY,
+} from './content.ja';
+import {
+  ID_DESIGN_SYSTEM_CATEGORIES,
+  ID_DESIGN_SYSTEM_SUMMARIES,
+  ID_PROMPT_TEMPLATE_CATEGORIES,
+  ID_PROMPT_TEMPLATE_COPY,
+  ID_PROMPT_TEMPLATE_TAGS,
+  ID_SKILL_COPY,
+} from './content.id';
+import {
+  ES_ES_DESIGN_SYSTEM_CATEGORIES,
+  ES_ES_DESIGN_SYSTEM_SUMMARIES,
+  ES_ES_PROMPT_TEMPLATE_CATEGORIES,
+  ES_ES_PROMPT_TEMPLATE_COPY,
+  ES_ES_PROMPT_TEMPLATE_TAGS,
+  ES_ES_SKILL_COPY,
+} from './content.es-ES';
+import {
+  PT_BR_DESIGN_SYSTEM_CATEGORIES,
+  PT_BR_DESIGN_SYSTEM_SUMMARIES,
+  PT_BR_PROMPT_TEMPLATE_CATEGORIES,
+  PT_BR_PROMPT_TEMPLATE_COPY,
+  PT_BR_PROMPT_TEMPLATE_TAGS,
+  PT_BR_SKILL_COPY,
+} from './content.pt-BR';
+import {
+  AR_DESIGN_SYSTEM_CATEGORIES,
+  AR_DESIGN_SYSTEM_SUMMARIES,
+  AR_PROMPT_TEMPLATE_CATEGORIES,
+  AR_PROMPT_TEMPLATE_COPY,
+  AR_PROMPT_TEMPLATE_TAGS,
+  AR_SKILL_COPY,
+} from './content.ar';
+import {
+  FA_DESIGN_SYSTEM_CATEGORIES,
+  FA_DESIGN_SYSTEM_SUMMARIES,
+  FA_PROMPT_TEMPLATE_CATEGORIES,
+  FA_PROMPT_TEMPLATE_COPY,
+  FA_PROMPT_TEMPLATE_TAGS,
+  FA_SKILL_COPY,
+} from './content.fa';
+import {
+  KO_DESIGN_SYSTEM_CATEGORIES,
+  KO_DESIGN_SYSTEM_SUMMARIES,
+  KO_PROMPT_TEMPLATE_CATEGORIES,
+  KO_PROMPT_TEMPLATE_COPY,
+  KO_PROMPT_TEMPLATE_TAGS,
+  KO_SKILL_COPY,
+} from './content.ko';
+import {
+  PL_DESIGN_SYSTEM_CATEGORIES,
+  PL_DESIGN_SYSTEM_SUMMARIES,
+  PL_PROMPT_TEMPLATE_CATEGORIES,
+  PL_PROMPT_TEMPLATE_COPY,
+  PL_PROMPT_TEMPLATE_TAGS,
+  PL_SKILL_COPY,
+} from './content.pl';
+import {
+  HU_DESIGN_SYSTEM_CATEGORIES,
+  HU_DESIGN_SYSTEM_SUMMARIES,
+  HU_PROMPT_TEMPLATE_CATEGORIES,
+  HU_PROMPT_TEMPLATE_COPY,
+  HU_PROMPT_TEMPLATE_TAGS,
+  HU_SKILL_COPY,
+} from './content.hu';
+import {
+  UK_DESIGN_SYSTEM_CATEGORIES,
+  UK_DESIGN_SYSTEM_SUMMARIES,
+  UK_PROMPT_TEMPLATE_CATEGORIES,
+  UK_PROMPT_TEMPLATE_COPY,
+  UK_PROMPT_TEMPLATE_TAGS,
+  UK_SKILL_COPY,
+} from './content.uk';
+import {
+  TR_DESIGN_SYSTEM_CATEGORIES,
+  TR_DESIGN_SYSTEM_SUMMARIES,
+  TR_PROMPT_TEMPLATE_CATEGORIES,
+  TR_PROMPT_TEMPLATE_COPY,
+  TR_PROMPT_TEMPLATE_TAGS,
+  TR_SKILL_COPY,
+} from './content.tr';
+import {
+  TH_DESIGN_SYSTEM_CATEGORIES,
+  TH_DESIGN_SYSTEM_SUMMARIES,
+  TH_PROMPT_TEMPLATE_CATEGORIES,
+  TH_PROMPT_TEMPLATE_COPY,
+  TH_PROMPT_TEMPLATE_TAGS,
+  TH_SKILL_COPY,
+} from './content.th';
+import {
+  IT_DESIGN_SYSTEM_CATEGORIES,
+  IT_DESIGN_SYSTEM_SUMMARIES,
+  IT_PROMPT_TEMPLATE_CATEGORIES,
+  IT_PROMPT_TEMPLATE_COPY,
+  IT_PROMPT_TEMPLATE_TAGS,
+  IT_SKILL_COPY,
+} from './content.it';
 
-const DE_SKILL_COPY: Record<string, { description?: string; examplePrompt?: string }> = {
+type LocalizedSkillCopy = { description?: string; examplePrompt?: string };
+type LocalizedPromptTemplateCopy = Partial<Pick<PromptTemplateSummary, 'summary' | 'title'>>;
+type LocalizedContentIds = {
+  skills: string[];
+  designSystems: string[];
+  designSystemCategories: string[];
+  promptTemplates: string[];
+  promptTemplateCategories: string[];
+  promptTemplateTags: string[];
+};
+type LocalizedContentBundle = {
+  skillCopy: Record<string, LocalizedSkillCopy>;
+  designSystemSummaries: Record<string, string>;
+  designSystemCategories: Record<string, string>;
+  promptTemplateCategories: Record<string, string>;
+  promptTemplateTags: Record<string, string>;
+  promptTemplateCopy: Record<string, LocalizedPromptTemplateCopy>;
+};
+
+const DE_SKILL_COPY: Record<string, LocalizedSkillCopy> = {
   'audio-jingle': {
     examplePrompt:
       'Ein fröhlicher 30-Sekunden-Indie-Pop-Jingle für den Launch eines Coffee Shops — warmes E-Piano, Besen-Drums, sanfter Bass und ein einzelner sonniger „ahhh“-Chor im Refrain. Ohne Gesang. Loop-freundliches Ende.',
     description:
       'Audio-Generierung für Jingles, Musikbetten, Voiceover und Soundeffekte. Musik-Anfragen werden an Suno V5 / Udio / Lyria geleitet, Sprache an MiniMax TTS / FishAudio / ElevenLabs V3 und SFX an ElevenLabs SFX oder AudioCraft. Die Ausgabe ist eine MP3/WAV-Datei im Projektordner.',
+  },
+  'agent-browser': {
+    examplePrompt:
+      'Verifizieren Sie die lokale Open-Design-Vorschau mit agent-browser: starten oder verbinden Sie CDP Chrome, öffnen Sie http://127.0.0.1:17573/, melden Sie Titel, URL, sichtbare Texte und speichern Sie einen Screenshot.',
+    description:
+      'Browser-Automation für lokale Open-Design-Preview-Validierung. Verbindet sich mit einem geprüften CDP-Chrome-Endpunkt, liest gerenderten Seitenzustand, kann bei Bedarf klicken/tippen und speichert einen Screenshot.',
   },
   'blog-post': {
     examplePrompt:
@@ -37,6 +190,16 @@ const DE_SKILL_COPY: Record<string, { description?: string; examplePrompt?: stri
     examplePrompt:
       'Eine Dokumentationsseite — linke Navigation, scrollbarer Artikelbereich, rechte Inhaltsübersicht.',
   },
+  'open-design-landing': {
+    examplePrompt:
+      'Entwerfen Sie die Open-Design-Marketing-Landingpage im Atelier-Zero- / Monocle-Stil — warme Papierleinwand, surreale Plaster-und-Architektur-Collage, übergroße gemischte Italic-Serif-Display-Type, römische Ziffern als Sektionsmarker und ein einziger Korallenakzent.',
+  },
+  'open-design-landing-deck': {
+    examplePrompt:
+      'Erstellen Sie das Open-Design-Pitch-Deck im Atelier-Zero-Stil — Cover mit Hero-Plate, römische Sektions-Trenner, Stats-Slide (31 Skills · 72 Systeme · 12 CLIs), Kundenzitat, CTA und Mega-Italic-Serif-End-Card. Horizontal-Swipe-Pagination wie eine Print-Magazine.',
+    description:
+      'Erstellt ein Single-File-Slide-Deck im Atelier-Zero-Stil (warmes Papier, italic-serif Akzent-Spans, korallenfarbene Schluss-Dots, surreale Collage-Platten). Horizontale Magazin-Pagination mit Pfeiltasten- und Leertaste-Navigation, Live-HUD mit Slide-Zähler und Fortschrittsbalken; teilt sich Stylesheet und 16-Slot-Bildbibliothek mit der Schwester-Skill `open-design-landing`.',
+  },
   'email-marketing': {
     examplePrompt:
       'Entwerfen Sie eine Launch-E-Mail für eine sportliche Laufschuhmarke — Masthead, Hero, großes Headline-Lockup, Specs Grid, CTA.',
@@ -44,6 +207,10 @@ const DE_SKILL_COPY: Record<string, { description?: string; examplePrompt?: stri
   'eng-runbook': {
     examplePrompt:
       'Schreiben Sie ein Runbook für unseren Auth-Service — Alerts, Dashboards, Standardverfahren, On-Call-Rotation.',
+  },
+  'faq-page': {
+    examplePrompt:
+      'Eine FAQ-Seite mit zusammenklappbaren Akkordeon-Abschnitten, Suchfunktion und Kategoriefilterung.',
   },
   'finance-report': {
     examplePrompt:
@@ -69,7 +236,6 @@ const DE_SKILL_COPY: Record<string, { description?: string; examplePrompt?: stri
   },
   'html-ppt': {},
   'html-ppt-course-module': {},
-  'html-ppt-dir-key-nav-minimal': {},
   'html-ppt-graphify-dark-graph': {},
   'html-ppt-hermes-cyber-terminal': {},
   'html-ppt-knowledge-arch-blueprint': {},
@@ -81,7 +247,6 @@ const DE_SKILL_COPY: Record<string, { description?: string; examplePrompt?: stri
   'html-ppt-testing-safety-alert': {},
   'html-ppt-weekly-report': {},
   'html-ppt-xhs-pastel-card': {},
-  'html-ppt-xhs-post': {},
   'html-ppt-xhs-white-editorial': {},
   'hyperframes': {
     examplePrompt:
@@ -99,9 +264,25 @@ const DE_SKILL_COPY: Record<string, { description?: string; examplePrompt?: stri
     examplePrompt:
       'Erstellen Sie eine Rechnung eines freiberuflichen Designstudios an einen Kunden für ein Brand-Identity-Projekt — drei Positionen, 10% Retainer, 9% Umsatzsteuer.',
   },
+  'kami-deck': {
+    examplePrompt:
+      'Erstellen Sie ein sechsteiliges Konferenz-Deck im kami-Stil (紙) — warmes Pergament, Tintenblau auf dem Cover, eine Serifenschnittstärke, horizontaler Magazin-Swipe.',
+    description:
+      'Erzeugt ein druckreifes Slide-Deck im kami-Designsystem: warmes Pergament (oder Tintenblau auf Cover/Kapitel), Serif nur in einer Schnittstärke, Tintenblau-Akzent ≤5% pro Folie, ohne Kursiv. Horizontale Magazin-Pagination (←/→ · Rad · Wischen · ESC-Übersicht). Eine eigenständige HTML-Datei, nur Google Fonts.',
+  },
+  'kami-landing': {
+    examplePrompt:
+      'Entwerfen Sie eine einseitige Studio-One-Pager im kami-Stil — Pergament-Leinwand, Tintenblau-Akzent, editorial wie ein Whitepaper.',
+    description:
+      'Erzeugt eine druckreife Einseiter im kami-Stil (紙): warmes Pergament, Tintenblau-Akzent, Serif in einer Schnittstärke, kein Kursiv, keine kühlen Grautöne. Liest sich wie Whitepaper oder Studio-One-Pager, nicht wie App-UI. Mehrsprachig (EN · zh-CN · ja). Eine eigenständige HTML-Datei ohne Abhängigkeiten.',
+  },
   'kanban-board': {
     examplePrompt:
       'Erstellen Sie ein Kanban-Board für ein 5-köpfiges Growth-Team mitten im Sprint — Backlog, Doing, Review, Done.',
+  },
+  'live-artifact': {
+    examplePrompt:
+      'Erstellen Sie ein interaktives Live-Artefakt mit Statuskarten, Datentabelle und einem Detailpanel, das auf Auswahländerungen reagiert.',
   },
   'magazine-poster': {
     examplePrompt:
@@ -187,6 +368,8 @@ const DE_DESIGN_SYSTEM_SUMMARIES: Record<string, string> = {
   airbnb: 'Reisemarktplatz. Warmer Korallenakzent, fotogetrieben, abgerundete UI.',
   airtable: 'Spreadsheet-Datenbank-Hybrid. Farbenfroh, freundlich, strukturierte Datenästhetik.',
   apple: 'Unterhaltungselektronik. Premium-Weißraum, SF Pro, filmische Bildsprache.',
+  'atelier-zero':
+    'Editoriales Studio-System. Warme Papierleinwand, surreale Plaster-und-Architektur-Collage, gemischte Italic-Serif-Display-Type, römische Ziffern als Sektionsmarker und ein einziger Korallenakzent — gemacht für Magazin-Landingpages, Studio-Sites und Manifestseiten.',
   binance: 'Krypto-Börse. Kräftiger gelber Akzent auf Monochrom, Trading-Floor-Dringlichkeit.',
   bmw: 'Luxusautomobil. Dunkle Premium-Flächen, präzise deutsche Engineering-Ästhetik.',
   bugatti: 'Hypercar-Marke. Kinodunkle Leinwand, monochrome Strenge, monumentale Display-Type.',
@@ -262,6 +445,7 @@ const DE_DESIGN_SYSTEM_SUMMARIES: Record<string, string> = {
   wise: 'Geldtransfer. Leuchtend grüner Akzent, freundlich und klar.',
   'x-ai': 'Elon Musks AI-Lab. Strenger Monochrom-Look, futuristischer Minimalismus.',
   xiaohongshu: 'Lifestyle-UGC-Social-Plattform. Singuläres Brand-Rot, großzügiger Radius, content-first.',
+  wechat: 'WeChat Mini Programs. Frisches Grün (#07C160), PingFang SC, Chat-Bubble-UI, Tab-Leiste.',
   zapier: 'Automatisierungsplattform. Warmes Orange, freundlich illustrationsgetrieben.',
 };
 
@@ -281,81 +465,15 @@ const DE_DESIGN_SYSTEM_CATEGORIES: Record<string, string> = {
   'Fintech & Crypto': 'Fintech & Krypto',
   'E-Commerce & Retail': 'E-Commerce & Handel',
   'Media & Consumer': 'Medien & Consumer',
+  'Social & Messaging': 'Social & Messaging',
   Automotive: 'Automotive',
   'Editorial & Print': 'Editorial & Print',
+  'Editorial · Studio': 'Editorial · Studio',
   'Retro & Nostalgic': 'Retro & Nostalgisch',
   'Themed & Unique': 'Thematisch & Einzigartig',
+  'Editorial / Personal / Publication': 'Editorial / Persönlich / Publikation',
   Uncategorized: 'Nicht kategorisiert',
 };
-
-const DE_SKILL_IDS_WITH_EN_FALLBACK = [] as const;
-
-const DE_DESIGN_SYSTEM_IDS_WITH_EN_FALLBACK = [
-  'agentic',
-  'ant',
-  'application',
-  'arc',
-  'artistic',
-  'bento',
-  'bold',
-  'brutalism',
-  'cafe',
-  'canva',
-  'claymorphism',
-  'clean',
-  'colorful',
-  'contemporary',
-  'corporate',
-  'cosmic',
-  'creative',
-  'dashboard',
-  'discord',
-  'dithered',
-  'doodle',
-  'dramatic',
-  'duolingo',
-  'editorial',
-  'elegant',
-  'energetic',
-  'enterprise',
-  'expressive',
-  'fantasy',
-  'flat',
-  'friendly',
-  'futuristic',
-  'github',
-  'glassmorphism',
-  'gradient',
-  'huggingface',
-  'levels',
-  'lingo',
-  'luxury',
-  'material',
-  'minimal',
-  'modern',
-  'mono',
-  'neobrutalism',
-  'neon',
-  'neumorphism',
-  'openai',
-  'pacman',
-  'paper',
-  'perspective',
-  'premium',
-  'professional',
-  'publication',
-  'refined',
-  'retro',
-  'shadcn',
-  'simple',
-  'skeumorphism',
-  'sleek',
-  'spacious',
-  'storytelling',
-  'tetris',
-  'vibrant',
-  'vintage',
-] as const;
 
 const DE_PROMPT_TEMPLATE_CATEGORIES: Record<string, string> = {
   Infographic: 'Infografik',
@@ -378,9 +496,9 @@ const DE_PROMPT_TEMPLATE_CATEGORIES: Record<string, string> = {
   Product: 'Produkt',
   'Short Form': 'Short Form',
   Travel: 'Reise',
+  'Live Artifact': 'Live-Artefakt',
+  'VFX / HTML-in-Canvas': 'VFX / HTML-in-Canvas',
 };
-
-const DE_PROMPT_TEMPLATE_IDS_WITH_EN_FALLBACK = [] as const;
 
 const DE_PROMPT_TEMPLATE_TAGS: Record<string, string> = {
   '3d': '3D',
@@ -437,6 +555,7 @@ const DE_PROMPT_TEMPLATE_TAGS: Record<string, string> = {
   'key-visual': 'Key Visual',
   'kinetic-typography': 'Kinetische Typografie',
   'linear-style': 'Linear-Stil',
+  'live-artifact': 'Live-Artefakt',
   logo: 'Logo',
   lyubu: 'Lyu Bu',
   map: 'Karte',
@@ -480,9 +599,28 @@ const DE_PROMPT_TEMPLATE_TAGS: Record<string, string> = {
   'website-to-video': 'Website-zu-Video',
   wuxia: 'Wuxia',
   zhaoyun: 'Zhaoyun',
+  dashboard: 'Dashboard',
+  data: 'Daten',
+  destruction: 'Zerstörung',
+  displacement: 'Displacement',
+  hero: 'Hero',
+  'html-in-canvas': 'HTML-in-Canvas',
+  iphone: 'iPhone',
+  keynote: 'Keynote',
+  liquid: 'Liquid',
+  'liquid-glass': 'Liquid Glass',
+  macbook: 'MacBook',
+  magnetic: 'Magnetic',
+  particles: 'Partikel',
+  portal: 'Portal',
+  'product-demo': 'Produkt-Demo',
+  shader: 'Shader',
+  shatter: 'Shatter',
+  text: 'Text',
+  webgl: 'WebGL',
 };
 
-const DE_PROMPT_TEMPLATE_COPY: Record<string, Partial<Pick<PromptTemplateSummary, 'summary' | 'title'>>> = {
+const DE_PROMPT_TEMPLATE_COPY: Record<string, LocalizedPromptTemplateCopy> = {
   '3d-stone-staircase-evolution-infographic': {
     title: '3D-Infografik einer Steintreppen-Evolution',
     summary:
@@ -798,6 +936,11 @@ const DE_PROMPT_TEMPLATE_COPY: Record<string, Partial<Pick<PromptTemplateSummary
     summary:
       'Ein 6-sekündiger vertikaler 1080×1920-HyperFrames-Hype-Clip – Apple-artiger $0 → $10.000-Counter mit grünem Flash, Money-Burst-Partikeln, Cash-Stack-Icon, Kicker-Headline. Aufgebaut auf dem HyperFrames-`apple-money-count`-Catalog-Block.',
   },
+  'weread-year-in-review-video-template': {
+    title: 'WeRead Year in Review Video Template',
+    summary:
+      'A 9:16 HyperFrames video template for WeRead-style annual reading reports: warm paper texture, editorial Chinese typography, book-page transitions, reading stats, note traces, interest keywords, and a final reading persona card.',
+  },
   'hyperframes-product-reveal-minimal': {
     title: 'HyperFrames: 5-Sekunden minimaler Product Reveal',
     summary:
@@ -923,45 +1066,227 @@ const DE_PROMPT_TEMPLATE_COPY: Record<string, Partial<Pick<PromptTemplateSummary
   },
 };
 
-export const GERMAN_CONTENT_IDS = {
-  skills: [
-    ...Object.keys(DE_SKILL_COPY),
-    ...DE_SKILL_IDS_WITH_EN_FALLBACK,
-  ],
-  designSystems: [
-    ...Object.keys(DE_DESIGN_SYSTEM_SUMMARIES),
-    ...DE_DESIGN_SYSTEM_IDS_WITH_EN_FALLBACK,
-  ],
-  designSystemCategories: Object.keys(DE_DESIGN_SYSTEM_CATEGORIES),
-  promptTemplates: [
-    ...Object.keys(DE_PROMPT_TEMPLATE_COPY),
-    ...DE_PROMPT_TEMPLATE_IDS_WITH_EN_FALLBACK,
-  ],
-  promptTemplateCategories: Object.keys(DE_PROMPT_TEMPLATE_CATEGORIES),
-  promptTemplateTags: Object.keys(DE_PROMPT_TEMPLATE_TAGS),
+const LOCALIZED_CONTENT: Partial<Record<Locale, LocalizedContentBundle>> = {
+  de: {
+    skillCopy: DE_SKILL_COPY,
+    designSystemSummaries: DE_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: DE_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: DE_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: DE_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: DE_PROMPT_TEMPLATE_COPY,
+  },
+  ru: {
+    skillCopy: RU_SKILL_COPY,
+    designSystemSummaries: RU_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: RU_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: RU_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: RU_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: RU_PROMPT_TEMPLATE_COPY,
+  },
+  fr: {
+    skillCopy: FR_SKILL_COPY,
+    designSystemSummaries: FR_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: FR_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: FR_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: FR_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: FR_PROMPT_TEMPLATE_COPY,
+  },
+  'zh-CN': {
+    skillCopy: ZH_CN_SKILL_COPY,
+    designSystemSummaries: ZH_CN_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: ZH_CN_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: ZH_CN_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: ZH_CN_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: ZH_CN_PROMPT_TEMPLATE_COPY,
+  },
+  ja: {
+    skillCopy: JA_SKILL_COPY,
+    designSystemSummaries: JA_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: JA_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: JA_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: JA_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: JA_PROMPT_TEMPLATE_COPY,
+  },
+  id: {
+    skillCopy: ID_SKILL_COPY,
+    designSystemSummaries: ID_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: ID_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: ID_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: ID_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: ID_PROMPT_TEMPLATE_COPY,
+  },
+  'es-ES': {
+    skillCopy: ES_ES_SKILL_COPY,
+    designSystemSummaries: ES_ES_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: ES_ES_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: ES_ES_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: ES_ES_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: ES_ES_PROMPT_TEMPLATE_COPY,
+  },
+  'pt-BR': {
+    skillCopy: PT_BR_SKILL_COPY,
+    designSystemSummaries: PT_BR_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: PT_BR_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: PT_BR_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: PT_BR_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: PT_BR_PROMPT_TEMPLATE_COPY,
+  },
+  ar: {
+    skillCopy: AR_SKILL_COPY,
+    designSystemSummaries: AR_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: AR_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: AR_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: AR_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: AR_PROMPT_TEMPLATE_COPY,
+  },
+  fa: {
+    skillCopy: FA_SKILL_COPY,
+    designSystemSummaries: FA_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: FA_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: FA_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: FA_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: FA_PROMPT_TEMPLATE_COPY,
+  },
+  ko: {
+    skillCopy: KO_SKILL_COPY,
+    designSystemSummaries: KO_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: KO_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: KO_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: KO_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: KO_PROMPT_TEMPLATE_COPY,
+  },
+  pl: {
+    skillCopy: PL_SKILL_COPY,
+    designSystemSummaries: PL_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: PL_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: PL_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: PL_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: PL_PROMPT_TEMPLATE_COPY,
+  },
+  hu: {
+    skillCopy: HU_SKILL_COPY,
+    designSystemSummaries: HU_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: HU_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: HU_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: HU_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: HU_PROMPT_TEMPLATE_COPY,
+  },
+  uk: {
+    skillCopy: UK_SKILL_COPY,
+    designSystemSummaries: UK_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: UK_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: UK_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: UK_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: UK_PROMPT_TEMPLATE_COPY,
+  },
+  tr: {
+    skillCopy: TR_SKILL_COPY,
+    designSystemSummaries: TR_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: TR_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: TR_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: TR_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: TR_PROMPT_TEMPLATE_COPY,
+  },
+  th: {
+    skillCopy: TH_SKILL_COPY,
+    designSystemSummaries: TH_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: TH_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: TH_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: TH_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: TH_PROMPT_TEMPLATE_COPY,
+  },
+  it: {
+    skillCopy: IT_SKILL_COPY,
+    designSystemSummaries: IT_DESIGN_SYSTEM_SUMMARIES,
+    designSystemCategories: IT_DESIGN_SYSTEM_CATEGORIES,
+    promptTemplateCategories: IT_PROMPT_TEMPLATE_CATEGORIES,
+    promptTemplateTags: IT_PROMPT_TEMPLATE_TAGS,
+    promptTemplateCopy: IT_PROMPT_TEMPLATE_COPY,
+  },
 };
 
-function isGerman(locale: Locale): boolean {
-  return locale === 'de';
+function buildLocalizedContentIds(content: LocalizedContentBundle): LocalizedContentIds {
+  return {
+    skills: Object.keys(content.skillCopy),
+    designSystems: Object.keys(content.designSystemSummaries),
+    designSystemCategories: Object.keys(content.designSystemCategories),
+    promptTemplates: Object.keys(content.promptTemplateCopy),
+    promptTemplateCategories: Object.keys(content.promptTemplateCategories),
+    promptTemplateTags: Object.keys(content.promptTemplateTags),
+  };
+}
+
+export const LOCALIZED_CONTENT_IDS = {
+  de: buildLocalizedContentIds(LOCALIZED_CONTENT.de!),
+  ru: buildLocalizedContentIds(LOCALIZED_CONTENT.ru!),
+  fr: buildLocalizedContentIds(LOCALIZED_CONTENT.fr!),
+} satisfies Record<'de' | 'ru' | 'fr', LocalizedContentIds>;
+
+export const GERMAN_CONTENT_IDS = LOCALIZED_CONTENT_IDS.de;
+export const RUSSIAN_CONTENT_IDS = LOCALIZED_CONTENT_IDS.ru;
+export const FRENCH_CONTENT_IDS = LOCALIZED_CONTENT_IDS.fr;
+
+// True when a locale resolves a built-in-content bundle — either its own
+// registered bundle or an intentional script fallback (zh-TW -> zh-CN). When
+// false, built-in skill / design-system / prompt-template copy renders in
+// English for that locale. Every supported non-English locale should be true.
+export function hasLocalizedContent(locale: Locale): boolean {
+  return getLocalizedContent(locale) !== undefined;
+}
+
+function getLocalizedContent(locale: Locale): LocalizedContentBundle | undefined {
+  const direct = LOCALIZED_CONTENT[locale];
+  if (direct) return direct;
+  // Traditional Chinese reuses the Simplified Chinese content tables when no
+  // dedicated zh-TW bundle exists, matching the zh fallback in
+  // `localizedRecordValue` so built-in content stays Chinese instead of
+  // silently rendering English.
+  if (locale.startsWith('zh')) return LOCALIZED_CONTENT['zh-CN'];
+  return undefined;
 }
 
 function normalizeText(text: string): string {
   return text.replace(/\s+/g, ' ').trim();
 }
 
+function localizedRecordValue(
+  locale: Locale,
+  values: Record<string, string> | undefined,
+  options: { includeEnglishFallback?: boolean } = {},
+): string | undefined {
+  if (!values) return undefined;
+  if (values[locale]) return values[locale];
+  if (locale === 'zh-TW' && values['zh-CN']) return values['zh-CN'];
+  if (locale.startsWith('zh') && values['zh-CN']) return values['zh-CN'];
+  if (options.includeEnglishFallback !== false && values.en) return values.en;
+  return undefined;
+}
+
+export function localizeSkillName(locale: Locale, skill: SkillSummary): string {
+  return localizedRecordValue(locale, skill.displayName) ?? skill.name;
+}
+
 export function localizeSkillPrompt(locale: Locale, skill: SkillSummary): string | undefined {
-  if (isGerman(locale)) {
-    const translated = DE_SKILL_COPY[skill.id]?.examplePrompt;
-    if (translated) return translated;
-  }
+  const inline = localizedRecordValue(locale, skill.examplePromptI18n, {
+    includeEnglishFallback: false,
+  });
+  if (inline) return inline;
+  const translated = getLocalizedContent(locale)?.skillCopy[skill.id]?.examplePrompt;
+  if (translated) return translated;
+  const fallback = localizedRecordValue(locale, skill.examplePromptI18n);
+  if (fallback) return fallback;
   return skill.examplePrompt ? normalizeText(skill.examplePrompt) : undefined;
 }
 
 export function localizeSkillDescription(locale: Locale, skill: SkillSummary): string {
-  if (isGerman(locale)) {
-    const translated = DE_SKILL_COPY[skill.id]?.description;
-    if (translated) return translated;
-  }
+  const inline = localizedRecordValue(locale, skill.descriptionI18n, {
+    includeEnglishFallback: false,
+  });
+  if (inline) return inline;
+  const translated = getLocalizedContent(locale)?.skillCopy[skill.id]?.description;
+  if (translated) return translated;
+  const fallback = localizedRecordValue(locale, skill.descriptionI18n);
+  if (fallback) return fallback;
   return normalizeText(skill.description);
 }
 
@@ -969,30 +1294,27 @@ export function localizeDesignSystemSummary(
   locale: Locale,
   system: DesignSystemSummary,
 ): string {
-  if (isGerman(locale)) {
-    const translated = DE_DESIGN_SYSTEM_SUMMARIES[system.id];
-    if (translated) return translated;
-  }
+  const translated = getLocalizedContent(locale)?.designSystemSummaries[system.id];
+  if (translated) return translated;
   return system.summary || system.category || '';
 }
 
 export function localizeDesignSystemCategory(locale: Locale, category: string): string {
-  if (!isGerman(locale)) return category;
-  return DE_DESIGN_SYSTEM_CATEGORIES[category] ?? category;
+  return getLocalizedContent(locale)?.designSystemCategories[category] ?? category;
 }
 
 export function localizePromptTemplateCategory(locale: Locale, category: string): string {
-  if (!isGerman(locale)) return category;
-  return DE_PROMPT_TEMPLATE_CATEGORIES[category] ?? category;
+  return getLocalizedContent(locale)?.promptTemplateCategories[category] ?? category;
 }
 
 export function localizePromptTemplateSummary(
   locale: Locale,
   template: PromptTemplateSummary,
 ): PromptTemplateSummary {
-  if (!isGerman(locale)) return template;
-  const translated = DE_PROMPT_TEMPLATE_COPY[template.id];
-  const tags = template.tags?.map((tag) => DE_PROMPT_TEMPLATE_TAGS[tag] ?? tag);
+  const content = getLocalizedContent(locale);
+  if (!content) return template;
+  const translated = content.promptTemplateCopy[template.id];
+  const tags = template.tags?.map((tag) => content.promptTemplateTags[tag] ?? tag);
   return {
     ...template,
     title: translated?.title ?? template.title,
