@@ -19,9 +19,8 @@ import {
 } from "@open-design/sidecar";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ENTRY_DIR_NAME = path.basename(__dirname);
 
-export const WORKSPACE_ROOT = path.resolve(__dirname, ENTRY_DIR_NAME === "dist" ? "../../.." : "../../..");
+export const WORKSPACE_ROOT = path.resolve(__dirname, "../../..");
 
 export const ALL_APPS = [APP_KEYS.DAEMON, APP_KEYS.WEB, APP_KEYS.DESKTOP] as const;
 export const DEFAULT_START_APPS = [APP_KEYS.DAEMON, APP_KEYS.WEB, APP_KEYS.DESKTOP] as const;
@@ -144,6 +143,15 @@ export function parsePortOption(value: number | string | null | undefined, optio
   return parsed;
 }
 
+export function parseParentPidOption(value: number | string | null | undefined): number | null {
+  if (value == null || value === "") return null;
+  const parsed = Number(value);
+  if (!Number.isSafeInteger(parsed) || parsed <= 0) {
+    throw new Error(`--parent-pid must be a positive safe integer`);
+  }
+  return parsed;
+}
+
 export function resolveToolDevConfig(options: ToolDevOptions = {}): ToolDevConfig {
   const namespace = resolveNamespace({ namespace: options.namespace, env: process.env, contract: OPEN_DESIGN_SIDECAR_CONTRACT });
   const toolsDevRoot = resolveSidecarBase({
@@ -168,7 +176,7 @@ export function resolveToolDevConfig(options: ToolDevOptions = {}): ToolDevConfi
     apps: {
       daemon: {
         ...daemon,
-        sidecarEntryPath: path.join(WORKSPACE_ROOT, "apps/daemon/sidecar/index.ts"),
+        sidecarEntryPath: path.join(WORKSPACE_ROOT, "apps/daemon/src/sidecar/index.ts"),
       },
       desktop: {
         ...desktop,
