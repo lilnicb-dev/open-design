@@ -6,7 +6,7 @@ triggers:
   - "premium animated website background"
   - "shaders.com effects"
 od:
-  mode: utility
+  mode: prototype
   category: 3d-shaders
   upstream: "https://github.com/shader-effects-inc/shaders"
 ---

@@ -6,7 +6,7 @@ triggers:
   - "batch triage"
   - "laya model"
 od:
-  mode: utility
+  mode: design-system
   category: creative-direction
   upstream: "https://github.com/NandhaKishorM/laya"
 ---

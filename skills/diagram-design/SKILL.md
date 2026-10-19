@@ -6,7 +6,7 @@ triggers:
   - "architecture diagram"
   - "process diagram"
 od:
-  mode: utility
+  mode: prototype
   category: diagrams
   upstream: "https://github.com/cathrynlavery/diagram-design"
 ---

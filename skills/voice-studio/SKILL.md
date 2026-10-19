@@ -6,7 +6,7 @@ triggers:
   - "voice clone narration"
   - "local text to speech"
 od:
-  mode: utility
+  mode: audio
   category: audio-music
   upstream: "https://github.com/debpalash/VoiceStudio"
 ---
